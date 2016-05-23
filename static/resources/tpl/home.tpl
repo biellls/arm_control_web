@@ -13,6 +13,10 @@
     <script src="{{ get_url('static', path='vendors/jQuery/jquery-2.2.3.js') }}"></script>
     <script src="{{ get_url('static', path='vendors/bootstrap/bootstrap.js') }}"></script>
     <link href="{{ get_url('static', path='vendors/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- TODO: downlaod scripts to local -->
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript"
+            src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
     <style type="text/css" media="screen">
       #editor { 
       position: relative;
@@ -34,53 +38,25 @@
 	      
 	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 		<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-	      </button> <a class="navbar-brand" href="#">Brand</a>
+	      </button> <a class="navbar-brand" href="#">Arm Control Web</a>
 	    </div>
 	    
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-		<li class="active">
-		  <a href="#">Link</a>
-		</li>
 		<li>
-		  <a href="#">Link</a>
-		</li>
-		<li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-		  <ul class="dropdown-menu">
-		    <li> <a href="#">Action</a> </li>
-		    <li> <a href="#">Another action</a> </li>
-		    <li> <a href="#">Something else here</a> </li>
-		    <li class="divider"> </li>
-		    <li> <a href="#">Separated link</a> </li>
-		    <li class="divider"> </li>
-		    <li> <a href="#">One more separated link</a> </li>
-		  </ul>
+		  <a href="#">Settings <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></a>
 		</li>
 	      </ul>
 	      <form class="navbar-form navbar-left" role="search">
 	      </form>
-	      <ul class="nav navbar-nav navbar-right">
-		<li> <a href="#">Link</a> </li>
-		<li class="dropdown">
-		  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-		  <ul class="dropdown-menu">
-		    <li> <a href="#">Action</a> </li>
-		    <li> <a href="#">Another action</a> </li>
-		    <li> <a href="#">Something else here</a> </li>
-		    <li class="divider"> </li>
-		    <li> <a href="#">Separated link</a> </li>
-		  </ul>
-		</li>
-	      </ul>
 	    </div>
 	    
 	  </nav>
 	  <div class="row">
-	    <div class="col-md-12">
+	    <div class="col-md-10">
 	      <div class="btn-group">
 		
-		<button class="btn btn-default" type="button">
+		<button onclick="uploadProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-arrow-down"></em>
 		  Load code
 		</button> 
@@ -88,7 +64,7 @@
 		  <em class="glyphicon glyphicon-arrow-down"></em>
 		  Load points
 		</button> 
-		<button class="btn btn-default" type="button">
+		<button onclick="runProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-play"></em> Run
 		</button> 
 		<button class="btn btn-default" type="button">
@@ -97,6 +73,10 @@
 		</button>
 	      </div>
 	    </div>
+	    <div class="col-md-2">
+              <h5>Status: <span class="label label-success">connected</span></h3>
+              <!--<h5>Status: <span class="label label-danger">disconnected</span></h3>-->
+            </div>
 	  </div>
           <br>
           <ul class="nav nav-tabs" id="tabView">
@@ -119,6 +99,11 @@
                       return x;
                       }</div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputFile">MB4 file input</label>
+                  <input type="file" id="mb4InputFile">
+                  <p class="help-block">Load code from .mb4 file.</p>
                 </div>
               </div>
             </div>
@@ -165,7 +150,7 @@
           <div class="modal-body">
               <form>
                 <div id "point-form-group" class="form-group">
-                  <label for="x">x</label>
+                  <label for="x">X</label>
                   <input type="number" class="form-control"
                          id="xinput" placeholder="X coordenate">
                 </div>
@@ -192,14 +177,14 @@
                 </div>
                 <div id "point-form-group" class="form-group">
                   <label for="yaw">Yaw</label>
-                  <input type="psi" class="form-control"
-                         id="psiinput" placeholder="Psi coordenate">
+                  <input type="number" class="form-control"
+                         id="psiinput" placeholder="Psi angle">
                 </div>
               </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
+            <div id="btn-input-coordinates" type="button" class="btn btn-primary">Add</button>
           </div>
         </div>
       </div>
