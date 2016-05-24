@@ -192,5 +192,6 @@
 
     <script src="{{ get_url('static', path='vendors/ace/src/ace.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/home.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ get_url('static', path='resources/js/config.js') }}" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

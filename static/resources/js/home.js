@@ -7,9 +7,12 @@ $(document).ready(function(){
     editor.setTheme("ace/theme/solarized_light");
     editor.getSession().setMode("ace/mode/javascript");
 
+    var ip = config.rosbridge_server.ip;
+    var port = config.rosbridge_server.port;
     //Initialize ROSlibjs
     var ros = new ROSLIB.Ros({
-        url : 'ws://10.0.2.15:9090'
+        //url : 'ws://10.0.2.15:9090'
+        url: 'ws://' + ip + ':' + port
     });
 
     ros.on('connection', function() {
