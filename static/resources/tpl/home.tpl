@@ -112,15 +112,17 @@
               <br>
               <!-- POINTS EDITOR -->
               <form>
-                <div id "points-form-group" class="form-group">
-                  <label for="point1">Point 1</label>
-                  <div data-toggle="tooltip" data-placement="top" title="Click to set values">
-                    <input type="text" class="form-control"
-                           id="point1input" placeholder="Coordenates"
-                           data-toggle="modal"
-                           data-target="#pointModal" readonly>
+                <div "points-form-group" class="form-group">
+                  <div id="inputPointsDiv">
+                    <label for="point1">Point 1</label>
+                    <div data-toggle="tooltip" data-placement="top" title="Click to set values">
+                      <input type="text" class="form-control"
+                             id="point1input" placeholder="Coordenates"
+                             data-toggle="modal"
+                             data-target="#pointModal" readonly>
+                    </div>
                   </div>
-                  <div id="btn-add-point" class="btn btn-default glyphicon glyphicon-plus"></div>
+                  <div onclick="addPoint()" class="btn btn-default glyphicon glyphicon-plus"></div>
                 </div>
 
                 <div class="form-group">
@@ -150,41 +152,46 @@
           <div class="modal-body">
               <form>
                 <div id "point-form-group" class="form-group">
-                  <label for="x">X</label>
-                  <input type="number" class="form-control"
-                         id="xinput" placeholder="X coordenate">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control"
+                         id="nameinput" placeholder="Point name">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="y">Y</label>
+                  <label for="j1">Joint 1</label>
                   <input type="number" class="form-control"
-                         id="yinput" placeholder="Y coordenate">
+                         id="j1input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="z">Z</label>
+                  <label for="j2">Joint 2</label>
                   <input type="number" class="form-control"
-                         id="zinput" placeholder="Z coordenate">
+                         id="j2input" placeholder="Joint angle">
+                </div>
+                <div id "point-form-group" class="form-group">
+                  <label for="j3">Joint 3</label>
+                  <input type="number" class="form-control"
+                         id="j3input" placeholder="Joint angle">
                 </div>
 
                 <div id "point-form-group" class="form-group">
-                  <label for="roll">Roll</label>
+                  <label for="j4">Joint 4</label>
                   <input type="number" class="form-control"
-                         id="rhoinput" placeholder="Rho angle">
+                         id="j4input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="pitch">Pitch</label>
+                  <label for="j5">Joint 5</label>
                   <input type="number" class="form-control"
-                         id="thetainput" placeholder="Theta angle">
+                         id="j5input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="yaw">Yaw</label>
+                  <label for="j6">Joint 6</label>
                   <input type="number" class="form-control"
-                         id="psiinput" placeholder="Psi angle">
+                         id="j6input" placeholder="Joint angle">
                 </div>
               </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <div id="btn-input-coordinates" type="button" class="btn btn-primary">Add</button>
+            <button onclick="setInputCoordinates()" type="button" class="btn btn-primary">Add</button>
           </div>
         </div>
       </div>
