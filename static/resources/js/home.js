@@ -5,14 +5,14 @@ var editor;
 $(document).ready(function(){
     initAce();
     initRoslibjs();
-    initBootrap();
+    initBootsrap();
 });
 
 function initAce() {
     //Initializae Ace editor
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/solarized_light");
-    editor.getSession().setMode("ace/mode/javascript");
+    //editor.getSession().setMode("ace/mode/javascript");
 }
 
 function initRoslibjs() {
@@ -43,7 +43,7 @@ function initRoslibjs() {
 }
 
 var modalCallerId;
-function initBootrap() {
+function initBootsrap() {
     //Initialize tooltips
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -54,7 +54,58 @@ function initBootrap() {
         $('#myInput').focus();
         modalCallerId = e.relatedTarget.id;
     })
+
+    //File input listeners
+    $('#mb4InputFile').change(readProgramFile); 
+    $('#pointsInputFile').change(readPointsFile); 
 }
+
+function readProgramFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    var f = evt.target.files[0]; 
+
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+	  var contents = e.target.result;
+          if (f.name.endsWith('.MB4')) {
+              editor.setValue(contents);
+          } else {
+              alert('Please select an .MB4 file');
+          }
+      }
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+  }
+
+function readPointsFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    var f = evt.target.files[0]; 
+
+    if (f) {
+      var r = new FileReader();
+        r.onload = function(e) {
+	    var contents = e.target.result;
+            if (f.name.endsWith('.POS')) {
+                //Set points
+                var pointLines = getLines(contents);
+                for (var i in pointLines) {
+                    //TODO Añadir point input si no está creado
+                    //TODO Set modal vals from input
+                    var id = '#point' + (parseInt(i, 10) + 1) + 'input';
+                    $(id).val(pointLines[i]);
+                }
+            } else {
+                alert('Please select a .POS file');
+            }
+        }
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+  }
 
 /*
  * Add new input for point
@@ -145,3 +196,8 @@ function getLines(text) {
     );
 }
 
+/* DEMANAR
+ * Afegir line num automaticament ja que utilitzaran labels? Quan obre */
+ /* un fitxer tir els nums que duu?
+ * Desde host no conecta a rosbridge server
+ */

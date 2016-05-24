@@ -94,10 +94,7 @@
                     <h3 class="panel-title">MB4 Editor</h3>
                   </div>
                   <div class="panel-body">
-                    <div id="editor">function foo(items) {
-                      var x = "All this is syntax highlighted";
-                      return x;
-                      }</div>
+                    <div id="editor">10 SERVO ON</div>
                   </div>
                 </div>
                 <div class="form-group">
