@@ -10,6 +10,9 @@
 
     <title>Arm Control Web</title>
     
+    <script src="{{ get_url('static', path='vendors/react-15.1.0/build/react.js') }}"></script>
+    <script src="{{ get_url('static', path='vendors/react-15.1.0/build/react-dom.js') }}"></script>
+    <script src="{{ get_url('static', path='vendors/babel-core/browser.min.js') }}"></script>
     <script src="{{ get_url('static', path='vendors/jQuery/jquery-2.2.3.js') }}"></script>
     <script src="{{ get_url('static', path='vendors/bootstrap/bootstrap.js') }}"></script>
     <link href="{{ get_url('static', path='vendors/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
@@ -75,123 +78,123 @@
 	    </div>
 	    <div class="col-md-2">
               <h5>Status: <span class="label label-success">connected</span></h3>
-              <!--<h5>Status: <span class="label label-danger">disconnected</span></h3>-->
-            </div>
-	  </div>
-          <br>
-          <ul class="nav nav-tabs" id="tabView">
-	    <li class="active"><a data-target="#mb4-editor"
-	    data-toggle="tab">MB4 Editor</a></li>
-	    <li><a data-target="#points-editor" data-toggle="tab">Points</a></li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane active" id="mb4-editor">
-              <br>
-              <!-- ACE EDITOR -->
-	      <div class="container">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">MB4 Editor</h3>
-                  </div>
-                  <div class="panel-body">
-                    <div id="editor">function foo(items) {
-                      var x = "All this is syntax highlighted";
-                      return x;
-                      }</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputFile">MB4 file input</label>
-                  <input type="file" id="mb4InputFile">
-                  <p class="help-block">Load code from .mb4 file.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="tab-pane" id="points-editor">
-              <br>
-              <!-- POINTS EDITOR -->
-              <form>
-                <div id "points-form-group" class="form-group">
-                  <label for="point1">Point 1</label>
-                  <div data-toggle="tooltip" data-placement="top" title="Click to set values">
-                    <input type="text" class="form-control"
-                           id="point1input" placeholder="Coordenates"
-                           data-toggle="modal"
-                           data-target="#pointModal" readonly>
-                  </div>
-                  <div id="btn-add-point" class="btn btn-default glyphicon glyphicon-plus"></div>
-                </div>
-
-                <div class="form-group">
-                  <label for="exampleInputFile">Points file input</label>
-                  <input type="file" id="pointsInputFile">
-                  <p class="help-block">Load points from .pos file.</p>
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-              </form>
-            </div>
-          </div>
-          
-
-	</div>
-      </div>
-    </div>
-
-    <!-- TODO: Add ace theme switcher -->
-    <!-- Modal -->
-    <div class="modal fade" id="pointModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Add point</h4>
-          </div>
-          <div class="modal-body">
-              <form>
-                <div id "point-form-group" class="form-group">
-                  <label for="x">X</label>
-                  <input type="number" class="form-control"
-                         id="xinput" placeholder="X coordenate">
-                </div>
-                <div id "point-form-group" class="form-group">
-                  <label for="y">Y</label>
-                  <input type="number" class="form-control"
-                         id="yinput" placeholder="Y coordenate">
-                </div>
-                <div id "point-form-group" class="form-group">
-                  <label for="z">Z</label>
-                  <input type="number" class="form-control"
-                         id="zinput" placeholder="Z coordenate">
-                </div>
-
-                <div id "point-form-group" class="form-group">
-                  <label for="roll">Roll</label>
-                  <input type="number" class="form-control"
-                         id="rhoinput" placeholder="Rho angle">
-                </div>
-                <div id "point-form-group" class="form-group">
-                  <label for="pitch">Pitch</label>
-                  <input type="number" class="form-control"
-                         id="thetainput" placeholder="Theta angle">
-                </div>
-                <div id "point-form-group" class="form-group">
-                  <label for="yaw">Yaw</label>
-                  <input type="number" class="form-control"
-                         id="psiinput" placeholder="Psi angle">
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <div id="btn-input-coordinates" type="button" class="btn btn-primary">Add</button>
-          </div>
+<!--<h5>Status: <span class="label label-danger">disconnected</span></h3>-->
+</div>
+</div>
+<br>
+<ul class="nav nav-tabs" id="tabView">
+  <li class="active"><a data-target="#mb4-editor"
+	                data-toggle="tab">MB4 Editor</a></li>
+  <li><a data-target="#points-editor" data-toggle="tab">Points</a></li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="mb4-editor">
+    <br>
+    <!-- ACE EDITOR -->
+    <div class="container">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">MB4 Editor</h3>
+        </div>
+        <div class="panel-body">
+          <div id="editor">function foo(items) {
+            var x = "All this is syntax highlighted";
+            return x;
+            }</div>
         </div>
       </div>
+      <div class="form-group">
+        <label for="exampleInputFile">MB4 file input</label>
+        <input type="file" id="mb4InputFile">
+        <p class="help-block">Load code from .mb4 file.</p>
+      </div>
     </div>
+  </div>
 
-    <script src="{{ get_url('static', path='vendors/ace/src/ace.js') }}" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ get_url('static', path='resources/js/home.js') }}" type="text/javascript" charset="utf-8"></script>
-    <script src="{{ get_url('static', path='resources/js/config.js') }}" type="text/javascript" charset="utf-8"></script>
-  </body>
+  <div class="tab-pane" id="points-editor">
+    <br>
+    <!-- POINTS EDITOR -->
+    <form>
+      <div id "points-form-group" class="form-group">
+        <label for="point1">Point 1</label>
+        <div data-toggle="tooltip" data-placement="top" title="Click to set values">
+          <input type="text" class="form-control"
+                 id="point1input" placeholder="Coordenates"
+                 data-toggle="modal"
+                 data-target="#pointModal" readonly>
+        </div>
+        <div id="btn-add-point" class="btn btn-default glyphicon glyphicon-plus"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleInputFile">Points file input</label>
+        <input type="file" id="pointsInputFile">
+        <p class="help-block">Load points from .pos file.</p>
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+
+<!-- TODO: Add ace theme switcher -->
+<!-- Modal -->
+<div class="modal fade" id="pointModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add point</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div id "point-form-group" class="form-group">
+            <label for="x">X</label>
+            <input type="number" class="form-control"
+                   id="xinput" placeholder="X coordenate">
+          </div>
+          <div id "point-form-group" class="form-group">
+            <label for="y">Y</label>
+            <input type="number" class="form-control"
+                   id="yinput" placeholder="Y coordenate">
+          </div>
+          <div id "point-form-group" class="form-group">
+            <label for="z">Z</label>
+            <input type="number" class="form-control"
+                   id="zinput" placeholder="Z coordenate">
+          </div>
+
+          <div id "point-form-group" class="form-group">
+            <label for="roll">Roll</label>
+            <input type="number" class="form-control"
+                   id="rhoinput" placeholder="Rho angle">
+          </div>
+          <div id "point-form-group" class="form-group">
+            <label for="pitch">Pitch</label>
+            <input type="number" class="form-control"
+                   id="thetainput" placeholder="Theta angle">
+          </div>
+          <div id "point-form-group" class="form-group">
+            <label for="yaw">Yaw</label>
+            <input type="number" class="form-control"
+                   id="psiinput" placeholder="Psi angle">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div id="btn-input-coordinates" type="button" class="btn btn-primary">Add</button>
+</div>
+</div>
+</div>
+</div>
+
+<script src="{{ get_url('static', path='vendors/ace/src/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/babel" src="{{ get_url('static', path='resources/js/home.js') }}"></script>
+<script src="{{ get_url('static', path='resources/js/config.js') }}" type="text/javascript" charset="utf-8"></script>
+</body>
 </html>
