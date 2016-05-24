@@ -94,9 +94,15 @@ function readPointsFile(evt) {
                 //Set points
                 var pointLines = getLines(contents);
                 for (var i in pointLines) {
-                    //TODO Añadir point input si no está creado
                     //TODO Set modal vals from input
-                    var id = '#point' + (parseInt(i, 10) + 1) + 'input';
+                    if (pointLines[i] === "")
+                        continue;
+                    var n = parseInt(i, 10) + 1
+                    var id = '#point' + n + 'input';
+                    if (n > numPoints) {
+                        appendPointInput(n);
+                        numPoints++;
+                    }
                     $(id).val(pointLines[i]);
                 }
             } else {
@@ -116,15 +122,18 @@ var numPoints = 1;
 function addPoint() {
     numPoints++;
     console.log("Add point");
+    appendPointInput(numPoints);
+}
+
+function appendPointInput(numPoint) {
     //Build the html for the new point
-    var newPointHTML = '<label for="point' + numPoints + '">Point ' + numPoints + '</label>' +
+    var newPointHTML = '<label for="point' + numPoint + '">Point ' + numPoint + '</label>' +
         '<div data-toggle="tooltip" data-placement="top" title="Click to set values">' +
         '<input type="text" class="form-control"' +
-        'id="point' + numPoints + 'input" placeholder="Coordenates"' +
+        'id="point' + numPoint + 'input" placeholder="Coordenates"' +
         'data-toggle="modal"' +
         'data-target="#pointModal" readonly>' +
         '</div>';
-
     //Append the generated new point input to the form
     $('#inputPointsDiv').append(newPointHTML);
 }
