@@ -74,8 +74,8 @@
 	      </div>
 	    </div>
 	    <div class="col-md-2">
-              <h5>Status: <span class="label label-success">connected</span></h3>
-              <!--<h5>Status: <span class="label label-danger">disconnected</span></h3>-->
+              <h5 id="connectedLabel" style="display:none;">Status: <span class="label label-success">connected</span></h3>
+              <h5 id="disconnectedLabel">Status: <span class="label label-danger">disconnected</span></h3>
             </div>
 	  </div>
           <br>

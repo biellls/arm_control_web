@@ -25,6 +25,8 @@ function initRoslibjs() {
 
     ros.on('connection', function() {
         console.log('Connected to websocket server.');
+        $('#disconnectedLabel').hide();
+        $('#connectedLabel').show();
     });
 
     ros.on('error', function(error) {
