@@ -83,6 +83,7 @@
 	    <li class="active"><a data-target="#mb4-editor"
 	    data-toggle="tab">MB4 Editor</a></li>
 	    <li><a data-target="#points-editor" data-toggle="tab">Points</a></li>
+	    <li><a data-target="#robot-control" data-toggle="tab">Robot control</a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="mb4-editor">
@@ -129,6 +130,17 @@
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
               </form>
+            </div>
+
+            <div class="tab-pane" id="robot-control">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/wKeyIcon.png') }}" id="wImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/wKeyIconPressed.png') }}" id="wImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/aKeyIcon.png') }}" id="aImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/sKeyIcon.png') }}" id="sImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/dKeyIcon.png') }}" id="dImg">
+              <br>
+              <!-- Robot control key canvas -->
+              <canvas id="keyCanvas" tabindex='1' width="700" height="500" style="border:1px solid #000000;"> </canvas>
             </div>
           </div>
           
@@ -197,5 +209,6 @@
     <script src="{{ get_url('static', path='vendors/ace/src/ace.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/home.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/config.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ get_url('static', path='resources/js/keyCanvas.js') }}" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

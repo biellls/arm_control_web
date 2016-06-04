@@ -6,6 +6,7 @@ $(document).ready(function(){
     initAce();
     initRoslibjs();
     initBootsrap();
+    initKeyCanvas(); 
 });
 
 function initAce() {
@@ -35,6 +36,8 @@ function initRoslibjs() {
 
     ros.on('close', function() {
         console.log('Connection to websocket server closed.');
+        $('#connectedLabel').hide();
+        $('#disconnectedLabel').show();
     });
 
     cmdExec = new ROSLIB.Topic({
@@ -177,10 +180,8 @@ function setInputCoordinates() {
 }
 
 function runProgram() {
-    var message = new ROSLIB.Message({data: '---SINGLE INSTRUCTION---'});
+    var message = new ROSLIB.Message({data: '---RUN PROGRAM---'});
     console.log('Running program');
-    cmdExec.publish(message);
-    message = new ROSLIB.Message({data: 'SERVO ON'});
     cmdExec.publish(message);
 }
 
