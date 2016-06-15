@@ -56,16 +56,15 @@
 	    <div class="col-md-10">
 	      <div class="btn-group">
 		
-		<button onclick="uploadProgram()" class="btn btn-default" type="button">
+		<button onclick="uploadProject()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-arrow-down"></em>
-		  Load code
-		</button> 
-		<button class="btn btn-default" type="button">
-		  <em class="glyphicon glyphicon-arrow-down"></em>
-		  Load points
+		  Load project
 		</button> 
 		<button onclick="runProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-play"></em> Run
+		</button> 
+		<button onclick="getJointState()" class="btn btn-default" type="button">
+		  <em class="glyphicon glyphicon-arrow-down"></em> Get joint state
 		</button> 
 		<button class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-check"></em>
@@ -75,7 +74,7 @@
 	    </div>
 	    <div class="col-md-2">
               <h5 id="connectedLabel" style="display:none;">Status: <span class="label label-success">connected</span></h3>
-              <h5 id="disconnectedLabel">Status: <span class="label label-danger">disconnected</span></h3>
+              <h5 style='cursor: pointer' id="disconnectedLabel">Status: <span class="label label-danger">disconnected</span></h3>
             </div>
 	  </div>
           <br>
@@ -134,13 +133,23 @@
 
             <div class="tab-pane" id="robot-control">
               <img style="display:none;" src="{{ get_url('static', path='resources/icons/wKeyIcon.png') }}" id="wImg">
-              <img style="display:none;" src="{{ get_url('static', path='resources/icons/wKeyIconPressed.png') }}" id="wImgPressed">
               <img style="display:none;" src="{{ get_url('static', path='resources/icons/aKeyIcon.png') }}" id="aImg">
               <img style="display:none;" src="{{ get_url('static', path='resources/icons/sKeyIcon.png') }}" id="sImg">
               <img style="display:none;" src="{{ get_url('static', path='resources/icons/dKeyIcon.png') }}" id="dImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/spaceKeyIcon.png') }}" id="spaceImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/upKeyIcon.png') }}" id="upImg">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/downKeyIcon.png') }}" id="downImg">
+
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/wKeyIconPressed.png') }}" id="wImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/aKeyIconPressed.png') }}" id="aImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/sKeyIconPressed.png') }}" id="sImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/dKeyIconPressed.png') }}" id="dImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/spaceKeyIconPressed.png') }}" id="spaceImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/upKeyIconPressed.png') }}" id="upImgPressed">
+              <img style="display:none;" src="{{ get_url('static', path='resources/icons/downKeyIconPressed.png') }}" id="downImgPressed">
               <br>
               <!-- Robot control key canvas -->
-              <canvas id="keyCanvas" tabindex='1' width="700" height="500" style="border:1px solid #000000;"> </canvas>
+              <canvas id="keyCanvas" tabindex='1' width="900" height="600" style="border:1px solid #000000;"> </canvas>
             </div>
           </div>
           

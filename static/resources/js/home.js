@@ -1,5 +1,7 @@
 var cmdExec;
 var editor;
+var jointState;
+var toolPose;
 
 
 $(document).ready(function(){
@@ -45,6 +47,23 @@ function initRoslibjs() {
         name : '/execute_instruction',
         messageType : 'std_msgs/String'
     });
+
+    var jointStateListener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/joint_state',
+        messageType : 'std_msgs/String'
+    });
+    
+    jointStateListener.subscribe(receiveJointState);
+
+    var toolPoseListener = new ROSLIB.Topic({
+        ros : ros,
+        name : '/tool_pose',
+        messageType : 'std_msgs/String'
+    });
+    
+    toolPoseListener.subscribe(receiveToolPose);
+
 }
 
 var modalCallerId;
@@ -63,6 +82,9 @@ function initBootsrap() {
     //File input listeners
     $('#mb4InputFile').change(readProgramFile); 
     $('#pointsInputFile').change(readPointsFile); 
+
+    //Disconnect click handler
+    $("#disconnectedLabel").click(initRoslibjs);
 }
 
 function readProgramFile(evt) {
@@ -185,6 +207,12 @@ function runProgram() {
     cmdExec.publish(message);
 }
 
+function uploadProject() {
+    deleteFromRobot();
+    uploadProgram();
+    uploadPoints();
+}
+
 function uploadProgram() {
     var text = editor.getValue();
     var lines = getLines(text);
@@ -200,6 +228,24 @@ function uploadProgram() {
     cmdExec.publish(message);
 }
 
+function uploadPoints() {
+    var message = new ROSLIB.Message({data: '---LOAD POINTS BEGIN---'});
+    cmdExec.publish(message);
+
+    for (var i = 1; i <= numPoints; i++) {
+        var point = $('#point' + i + 'input').val();
+        var message = new ROSLIB.Message({data: point});
+        cmdExec.publish(message);
+    }
+    
+    var message = new ROSLIB.Message({data: '---LOAD POINTS END---'});
+    cmdExec.publish(message);
+}
+
+function deleteFromRobot() {
+    publishMessage('---DELETE---');
+}
+
 function getLines(text) {
     return text.split('\n').map(
         function(x) {
@@ -208,8 +254,19 @@ function getLines(text) {
     );
 }
 
-/* DEMANAR
- * Afegir line num automaticament ja que utilitzaran labels? Quan obre */
- /* un fitxer tir els nums que duu?
- * Desde host no conecta a rosbridge server
- */
+function publishMessage(msg) {
+    var message = new ROSLIB.Message({data: msg});
+    cmdExec.publish(message);
+}
+
+function getJointState() {
+    publishMessage("---REQUEST JOINT STATE---");
+}
+
+function receiveToolPose(msg) {
+    console.log(msg.data);
+}
+
+function receiveJointState(msg) {
+    console.log(msg.data);
+}

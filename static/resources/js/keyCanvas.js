@@ -2,40 +2,56 @@
 var canvas;
 var ctx;
 
-var keys = ['w', 'a', 's', 'd'];
-var keyPosition = {
-    'w': [200, 20],
-    'a': [90, 130],
-    's': [200, 130],
-    'd': [310, 130]
-}
-
-var keyImgId = {
-    'w': 'wImg',
-    'a': 'aImg',
-    's': 'sImg',
-    'd': 'dImg'
-}
-
-var keyPressed = {
-    'w': false,
-    'a': false,
-    's': false,
-    'd': false
+var keyInfo = {
+    'w': {
+        'position': [200, 20],
+        'keyImgId': 'wImg',
+        'keyPressed': false
+    },
+    'a': {
+        'position': [90, 130],
+        'keyImgId': 'aImg',
+        'keyPressed': false
+    },
+    's': {
+        'position': [200, 130],
+        'keyImgId': 'sImg',
+        'keyPressed': false
+    },
+    'd': {
+        'position': [310, 130],
+        'keyImgId': 'dImg',
+        'keyPressed': false
+    },
+    'space': {
+        'position': [70, 400],
+        'keyImgId': 'spaceImg',
+        'keyPressed': false
+    },
+    'up': {
+        'position': [600, 20],
+        'keyImgId': 'upImg',
+        'keyPressed': false
+    },
+    'down': {
+        'position': [600, 130],
+        'keyImgId': 'downImg',
+        'keyPressed': false
+    }
 }
 
 function initKeyCanvas() {
     canvas =document.getElementById("keyCanvas");
     ctx = canvas.getContext("2d");
+    $('#keyCanvas').css('background-color', 'rgba(51, 153, 255, 0.2)');
     canvas.addEventListener( "keydown", doKeyDown, true);
     canvas.addEventListener( "keyup", doKeyUp, true);
     drawKeys();
 }
 
 function drawKeys() {
-    for (var i in keys) {
-        key = keys[i]
-        drawKey(key, keyPressed[key]);
+    for (var key in keyInfo) {
+        drawKey(key, keyInfo[key]['keyPressed']);
     }
 }
 
@@ -49,42 +65,70 @@ function repaint() {
 }
 
 function updateLastState() {
-    for (var i in keyPressed)
-        lastState[i] = keyPressed[i];
+    //for (var i in keyPressed)
+    //    lastState[i] = keyPressed[i];
+    for (var key in keyInfo)
+        lastState[key] = keyInfo[key]['keyPressed']
 }
 
 function stateChanged() {
-    for (var i in keyPressed) {
-        if (keyPressed[i] !== lastState[i])
+    for (var key in keyInfo) {
+        if (keyInfo[key]['keyPressed'] !== lastState[key])
             return true;
     }
     return false;
 }
 
 /*
- * Key is w, a, s or d
+ * Key is w, a, s, d, space etc
  */
 function drawKey(key, pressed) {
-    var imgId = keyImgId[key];
+    var imgId = keyInfo[key]['keyImgId'];
     if (pressed)
         imgId += 'Pressed';
     var img=document.getElementById(imgId);
-    var keyPos = keyPosition[key];
+    var keyPos = keyInfo[key]['position'];
     ctx.drawImage(img, keyPos[0], keyPos[1]);
 }
 
 function doKeyDown(e) {
     if (e.keyCode == 87) {  // w is pressed
-        keyPressed['w'] = true;
-        repaint();
+        console.log('h');
+        keyInfo['w']['keyPressed'] = true;
+    } else if (e.keyCode == 65) {
+        keyInfo['a']['keyPressed'] = true;
+    } else if (e.keyCode == 83) {
+        keyInfo['s']['keyPressed'] = true;
+    } else if (e.keyCode == 68) {
+        keyInfo['d']['keyPressed'] = true;
+    } else if (e.keyCode == 32) {
+        keyInfo['space']['keyPressed'] = true;
+    } else if (e.keyCode == 38) {
+        keyInfo['up']['keyPressed'] = true;
+    } else if (e.keyCode == 40) {
+        keyInfo['down']['keyPressed'] = true;
     }
+    e.preventDefault();
+    repaint();
 }
 
 function doKeyUp(e) {
     if (e.keyCode == 87) {  // w is pressed
-        keyPressed['w'] = false;
-        repaint();
+        keyInfo['w']['keyPressed'] = false;
+    } else if (e.keyCode == 65) {
+        keyInfo['a']['keyPressed'] = false;
+    } else if (e.keyCode == 83) {
+        keyInfo['s']['keyPressed'] = false;
+    } else if (e.keyCode == 68) {
+        keyInfo['d']['keyPressed'] = false;
+    } else if (e.keyCode == 32) {
+        keyInfo['space']['keyPressed'] = false;
+    } else if (e.keyCode == 38) {
+        keyInfo['up']['keyPressed'] = false;
+    } else if (e.keyCode == 40) {
+        keyInfo['down']['keyPressed'] = false;
     }
+    repaint();
 }
 
 function clearCanvas() {
