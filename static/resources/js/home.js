@@ -254,6 +254,12 @@ function getLines(text) {
     );
 }
 
+function syntaxCheck() {
+    console.log("Starting syntax check");
+    var errorMessages = analyze_text(editor.getValue());
+    console.log("Syntax check finished");
+}
+
 function publishMessage(msg) {
     var message = new ROSLIB.Message({data: msg});
     cmdExec.publish(message);

@@ -66,7 +66,7 @@
 		<button onclick="getJointState()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-arrow-down"></em> Get joint state
 		</button> 
-		<button class="btn btn-default" type="button">
+		<button onclick="syntaxCheck()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-check"></em>
 		  Syntax Check
 		</button>
@@ -216,8 +216,11 @@
     </div>
 
     <script src="{{ get_url('static', path='vendors/ace/src/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ get_url('static', path='vendors/lexer/lexer.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/home.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/config.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ get_url('static', path='resources/js/keyCanvas.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ get_url('static', path='resources/js/lexical.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ get_url('static', path='resources/js/syntactical.js') }}" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>
