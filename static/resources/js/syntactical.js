@@ -41,10 +41,17 @@ function attempt_error_recovery(tk) {
 }
 
 function error_msg(message, error_token) {
-    var error_message = "ERROR in line " + error_token['row'] + ". " + message +
-        " and instead found " + error_token['value'];
+    var row = error_token === undefined ? 'EOF' : error_token['row'];
+    var value = error_token === undefined ? 'END OF FILE' : error_token['value'];
+    var error_message = "ERROR in line " + row + ". " + message +
+        " and instead found " + value;
     console.log(error_message);
     errors.push(error_message);
+}
+
+// TODO implement first table and use it for lookup
+function is_statement(tk) {
+    return tk === 'KW_IF' || tk === 'KW_WHILE' || tk === 'RW_END';
 }
 
 ////
@@ -55,7 +62,7 @@ function A_PROGRAM() {
 }
 
 function A_STMTS() {
-    while (token !== undefined) {
+    while (token !== undefined && is_statement(token['token'])) {
         A_STMT();
         if (token !== undefined && token['token'] !== 'EOL') {
             error_msg("Expected line jump after statement", token);
@@ -73,9 +80,9 @@ function A_STMT() {
     } else if (tk === 'RW_END') {
         next_token();
     } else {
-        error_msg("Expected statement", token);
-        attempt_error_recovery("EOL");
+        return false;
     }
+    return true;
 }
 
 function A_IF() {
@@ -95,6 +102,11 @@ function A_IF() {
         return;
     }
     next_token();
+    // Try to parse a statement
+    if (!is_statement(token['token'])) {
+        error_msg("Expected statement", token);
+        attempt_error_recovery("EOL");
+    }
     A_STMT();
 }
 
@@ -107,13 +119,24 @@ function A_WHILE() {
     } else {
         next_token();
     }
-    A_STMTS();
-    var tk = token['token'];
-    if (tk !== 'KW_THEN') {
-        error_msg("Expected THEN after if condition", token);
+    if (token !== undefined && token['token'] !== 'EOL') {
+        error_msg("Expected line jump after while header", token);
         attempt_error_recovery('EOL');
+    }
+    next_token();
+    while (token !== undefined && !is_statement(token['token']) && token['token'] != "EOL") {
+        error_msg("Expected statement", token);
+        if (attempt_error_recovery("EOL")) {
+            next_token();
+        }
+    }
+    if (is_statement(token['token'])) {
+        A_STMTS();
+    }
+    if (token == undefined || token['token'] !== 'KW_WEND') {
+        error_msg("Expected WEND while loop", token);
+        attempt_error_recovery('WEND');
         return;
     }
     next_token();
-    A_STMT();
 }

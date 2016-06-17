@@ -38,10 +38,11 @@ lexer.addRule(/\n/, function () {
     return make_token("EOL", '\n');
 });
 // Skip spaces
-lexer.addRule(/\s+/, function () { col++; });
+lexer.addRule(/[ \f\r\t\v\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/, function () { col++; });
 
 // Add keywords
 add_keyword_rule('WHILE');
+add_keyword_rule('WEND');
 add_keyword_rule('IF');
 add_keyword_rule('THEN');
 
