@@ -11,7 +11,7 @@ function analyze_text(text) {
     token = lexer.lex();
     lookahead = lexer.lex();
     A_PROGRAM();
-    return errors.join('\n');
+    return errors;
 }
 
 ////
@@ -21,6 +21,20 @@ function next_token() {
     token = lookahead;
     lookahead = lexer.lex();
 
+    //Report and skip unexpected characters
+    while (token !== undefined && token['token'] === 'UNRECOGNIZED') {
+        error_msg("Unrecognized token", token);
+        token = lookahead;
+        lookahead = lexer.lex();
+    }
+
+    //Skip multiple line jumps
+    while (token !== undefined && lookahead !== undefined &&
+           token['token'] === 'EOL' && lookahead['token'] === 'EOL') {
+        token = lookahead;
+        lookahead = lexer.lex();
+    }
+
     if (DEBUG_SYNTACTICAL) {
         if (token !== undefined)
             console.log("Token: [" + token['token'] + ", " + token['value'] + "]");
@@ -29,8 +43,14 @@ function next_token() {
     }
 }
 
-function attempt_error_recovery(tk) {
-    while (token !== undefined && token['token'] != tk) {
+// Tks can be a single token or an array of tokens
+//We have successfully recovered from the error if we find a token
+//contained in tks
+function attempt_error_recovery(tks) {
+    if (typeof tks === 'string' || tks instanceof String) {
+        tks = [tks];
+    }
+    while (token !== undefined && tks.indexOf(token['token']) === -1) {
         next_token();
     }
     if (token === undefined) {
@@ -41,12 +61,34 @@ function attempt_error_recovery(tk) {
 }
 
 function error_msg(message, error_token) {
-    var row = error_token === undefined ? 'EOF' : error_token['row'];
-    var value = error_token === undefined ? 'END OF FILE' : error_token['value'];
-    var error_message = "ERROR in line " + row + ". " + message +
-        " and instead found " + value;
+    var r = error_token === undefined ? row : error_token['row'];
+    var v = error_token === undefined ? 'END OF FILE' : error_token['value'];
+    if (v === '\n') {
+        if (r !== 'EOF')
+            r -= 1;
+        v = "end of line";
+    }
+    var error_message = "ERROR in line " + r + ". " + message +
+        " and instead found " + v;
     console.log(error_message);
-    errors.push(error_message);
+    //errors.push(error_message);
+    var error_message2 = "ERROR: "
+    if (error_token === undefined) {
+        error_message2 += message;
+    } else {
+        error_message2 += message;
+        if (error_token['token'] !== 'UNRECOGNIZED')
+            error_message2 += " and instead found " + v;
+        else
+            error_message2 += " " + v;
+    }
+    var error = {
+        row: r - 1,   // zero based
+        //column: error_token['col'], 
+        text: error_message2,
+        type: "error"
+    };
+    errors.push(error);
 }
 
 // TODO implement first table and use it for lookup
@@ -87,13 +129,21 @@ function A_STMT() {
 
 function A_IF() {
     next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
     var tk = token['token'];
     if (tk !== 'RW_TRUE' && tk != 'RW_FALSE') {
         error_msg("IF expression expected boolean", token);
         // TODO return if error recovery fails
-        attempt_error_recovery('KW_THEN');
+        attempt_error_recovery(['KW_THEN', 'EOL']);
     } else {
         next_token();
+    }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
     }
     var tk = token['token'];
     if (tk !== 'KW_THEN') {
@@ -102,16 +152,25 @@ function A_IF() {
         return;
     }
     next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
     // Try to parse a statement
     if (!is_statement(token['token'])) {
         error_msg("Expected statement", token);
         attempt_error_recovery("EOL");
+        return;
     }
     A_STMT();
 }
 
 function A_WHILE() {
     next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
     tk = token['token'];
     if (tk !== 'RW_TRUE' && tk != 'RW_FALSE') {
         error_msg("WHILE expression expected boolean", token);
@@ -123,6 +182,10 @@ function A_WHILE() {
         error_msg("Expected line jump after while header", token);
         attempt_error_recovery('EOL');
     }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
     next_token();
     while (token !== undefined && !is_statement(token['token']) && token['token'] != "EOL") {
         error_msg("Expected statement", token);
@@ -130,10 +193,14 @@ function A_WHILE() {
             next_token();
         }
     }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
     if (is_statement(token['token'])) {
         A_STMTS();
     }
-    if (token == undefined || token['token'] !== 'KW_WEND') {
+    if (token === undefined || token['token'] !== 'KW_WEND') {
         error_msg("Expected WEND while loop", token);
         attempt_error_recovery('WEND');
         return;

@@ -7,6 +7,7 @@ function resetLexer() {
 }
 
 function make_token(token, value) {
+    col += value.length;
     return {
         'token': token,
         'value': value,
@@ -28,7 +29,7 @@ function add_reserved_word_rule(rw) {
 }
 
 var lexer = new Lexer(function (char) {
-    throw new Error("Unexpected character at row " + row + ", col " + col + ": " + char);
+    //throw new Error("Unexpected character at row " + row + ", col " + col + ": " + char);
 });
 
 // Handle line jump
@@ -38,7 +39,9 @@ lexer.addRule(/\n/, function () {
     return make_token("EOL", '\n');
 });
 // Skip spaces
-lexer.addRule(/[ \f\r\t\v\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/, function () { col++; });
+lexer.addRule(/[ \f\r\t\v\u00a0\u1680\u180e\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/, function (lexeme) {
+    col += lexeme.length;
+});
 
 // Add keywords
 add_keyword_rule('WHILE');
@@ -61,15 +64,16 @@ lexer.addRule(/[a-f\d]+/i, function (lexeme) {
 });
 
 // Identifiers
-lexer.addRule(/[a-z]+/, function (lexeme) {
+lexer.addRule(/[a-zA-Z]+/, function (lexeme) {
     return make_token('ID', lexeme);
 });
 
 // Error: Unexpected character
-lexer.addRule(/./, function () {
-    this.reject = true;
+lexer.addRule(/./, function (lexeme) {
+    //this.reject = true;
     col++;
-}, []);
+    return make_token('UNRECOGNIZED', lexeme);
+});
 
 
 // var tokens = lexer.lex();

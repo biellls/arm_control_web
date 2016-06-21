@@ -16,6 +16,10 @@ function initAce() {
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/solarized_light");
     //editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().on('change', function () {
+        var errorMessages = analyze_text(editor.getValue());
+        editor.getSession().setAnnotations(errorMessages);
+    });
 }
 
 function initRoslibjs() {
@@ -257,6 +261,7 @@ function getLines(text) {
 function syntaxCheck() {
     console.log("Starting syntax check");
     var errorMessages = analyze_text(editor.getValue());
+    editor.getSession().setAnnotations(errorMessages);
     console.log("Syntax check finished");
 }
 
