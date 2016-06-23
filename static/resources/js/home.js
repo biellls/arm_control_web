@@ -95,11 +95,27 @@ function readProgramFile(evt) {
       var r = new FileReader();
       r.onload = function(e) { 
 	  var contents = e.target.result;
+          var pointLines = getLines(contents);
+          var processedLines = [];
           if (f.name.endsWith('.MB4')) {
-              editor.setValue(contents);
+              for (var i in pointLines) {
+                  var line = pointLines[i];
+                  // Strip line number and extra spaces
+                  line = line .replace(/^\d+[ \t]*/i, '');
+                      //.replace(/;[^$]*$/i, '')
+                      //.trim()
+                      //.replace(/[\t ]+/i, ' ');
+                  processedLines.push(line);
+              }
+              editor.setValue(processedLines.join('\n'));
           } else {
               alert('Please select an .MB4 file');
           }
+          //if (f.name.endsWith('.MB4')) {
+          //    editor.setValue(contents);
+          //} else {
+          //    alert('Please select an .MB4 file');
+          //}
       }
       r.readAsText(f);
     } else { 
@@ -220,7 +236,14 @@ function uploadProgram() {
     cmdExec.publish(message);
 
     for (var i in lines) {
-        var message = new ROSLIB.Message({data: lines[i]});
+        var linenum = (parseInt(i) + 1) * 10;
+        var line = lines[i];
+        // Remove extra spaces and comments
+        line = linenum + ' ' +
+            line.replace(/'[^$]*$/i, '')
+            .trim()
+            .replace(/[\t ]+/i, ' ');
+        var message = new ROSLIB.Message({data: line});
         cmdExec.publish(message);
     }
     
