@@ -71,6 +71,7 @@
 		  Syntax Check
 		</button>
 	      </div>
+                <div class="checkbox"> <label> <input id='checkbox-flycheck' type="checkbox" checked> Auto Syntax Check </label> </div>
 	    </div>
 	    <div class="col-md-2">
               <h5 id="connectedLabel" style="display:none;">Status: <span class="label label-success">connected</span></h3>
