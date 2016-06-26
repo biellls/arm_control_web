@@ -70,6 +70,10 @@
 		  <em class="glyphicon glyphicon-check"></em>
 		  Syntax Check
 		</button>
+		<button onclick="clearSyntaxErrorMessages()" class="btn btn-default" type="button">
+		  <em class="glyphicon glyphicon-remove-circle"></em>
+		  Clear Syntax Errors
+		</button>
 	      </div>
                 <div class="checkbox"> <label> <input id='checkbox-flycheck' type="checkbox" checked> Auto Syntax Check </label> </div>
 	    </div>
@@ -95,7 +99,7 @@
                     <h3 class="panel-title">MB4 Editor</h3>
                   </div>
                   <div class="panel-body">
-                    <div id="editor">10 SERVO ON</div>
+                    <div id="editor">SERVO ON</div>
                   </div>
                 </div>
                 <div class="form-group">
@@ -114,7 +118,7 @@
                   <div id="inputPointsDiv">
                     <label for="point1">Point 1</label>
                     <div data-toggle="tooltip" data-placement="top" title="Click to set values">
-                      <input type="text" class="form-control"
+                      <input type="text" class="points form-control"
                              id="point1input" placeholder="Coordenates"
                              data-toggle="modal"
                              data-target="#pointModal" readonly>

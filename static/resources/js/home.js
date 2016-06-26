@@ -17,9 +17,15 @@ function initAce() {
     editor.setTheme("ace/theme/solarized_light");
     //editor.getSession().setMode("ace/mode/javascript");
     editor.getSession().on('change', function () {
-        var errorMessages = analyze_text(editor.getValue());
-        editor.getSession().setAnnotations(errorMessages);
+        if (document.getElementById("checkbox-flycheck").checked) {
+            var errorMessages = analyze_text(editor.getValue());
+            editor.getSession().setAnnotations(errorMessages);
+        }
     });
+}
+
+function clearSyntaxErrorMessages() {
+    editor.getSession().clearAnnotations();
 }
 
 function initRoslibjs() {
@@ -174,7 +180,7 @@ function appendPointInput(numPoint) {
     //Build the html for the new point
     var newPointHTML = '<label for="point' + numPoint + '">Point ' + numPoint + '</label>' +
         '<div data-toggle="tooltip" data-placement="top" title="Click to set values">' +
-        '<input type="text" class="form-control"' +
+        '<input type="text" class="points form-control"' +
         'id="point' + numPoint + 'input" placeholder="Coordenates"' +
         'data-toggle="modal"' +
         'data-target="#pointModal" readonly>' +
@@ -216,6 +222,10 @@ function setInputCoordinates() {
             j6 + ')(7,0)';
         $('#' + modalCallerId).val(pointDef);
         $('#pointModal').modal('hide');
+        if (document.getElementById("checkbox-flycheck").checked) {
+            var errorMessages = analyze_text(editor.getValue());
+            editor.getSession().setAnnotations(errorMessages);
+        }
     } else {
         alert("Please set all input coordinates before pressing add")
     }
