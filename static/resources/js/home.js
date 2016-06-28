@@ -2,6 +2,8 @@ var cmdExec;
 var editor;
 var jointState;
 var toolPose;
+var modalCallerId;
+var requestingJointState = false;
 
 
 $(document).ready(function(){
@@ -76,7 +78,6 @@ function initRoslibjs() {
 
 }
 
-var modalCallerId;
 function initBootsrap() {
     //Initialize tooltips
     $(function () {
@@ -208,7 +209,7 @@ function setInputCoordinates() {
         var pname = $('#nameinput').val();
         var j1 = $('#j1input').val();
         var j2 = $('#j2input').val();
-        var j3 = $('#j1input').val();
+        var j3 = $('#j3input').val();
         var j4 = $('#j4input').val();
         var j5 = $('#j5input').val();
         var j6 = $('#j6input').val();
@@ -229,6 +230,20 @@ function setInputCoordinates() {
     } else {
         alert("Please set all input coordinates before pressing add")
     }
+}
+
+function setPointFromJointState(jointState) {
+        $('#j1input').val(jointState[0]);
+        $('#j2input').val(jointState[1]);
+        $('#j3input').val(jointState[2]);
+        $('#j4input').val(jointState[3]);
+        $('#j5input').val(jointState[4]);
+        $('#j6input').val(jointState[5]);
+}
+
+function importCurrentRobotPosition() {
+    publishMessage("---REQUEST JOINT STATE---");
+    requestingJointState = modalCallerId;
 }
 
 function runProgram() {
@@ -311,6 +326,19 @@ function receiveToolPose(msg) {
     console.log(msg.data);
 }
 
+function unpackJointStateMessage(msg) {
+    var data = msg.data;
+    var jointState = data.split(',');
+    if (jointState.length != 6)
+        throw "Invalid joint state message length";
+    return jointState;
+}
+
 function receiveJointState(msg) {
     console.log(msg.data);
+    if (requestingJointState) {
+        var jointState = unpackJointStateMessage(msg);
+        setPointFromJointState(requestingJointState, jointState);
+        requestingJointState = false;
+    }
 }

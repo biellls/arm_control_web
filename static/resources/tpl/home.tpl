@@ -214,6 +214,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button onclick="importCurrentRobotPosition()" type="button" class="btn btn-primary">Import current robot position</button>
             <button onclick="setInputCoordinates()" type="button" class="btn btn-primary">Add</button>
           </div>
         </div>
