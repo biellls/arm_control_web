@@ -86,8 +86,9 @@ function initBootsrap() {
 
     //Initialize modal
     $('#pointModal').on('shown.bs.modal', function (e) {
-        $('#myInput').focus();
         modalCallerId = e.relatedTarget.id;
+        setInputCoordenatesFromModalCaller();
+        $('#myInput').focus();
     })
 
     //File input listeners
@@ -232,13 +233,34 @@ function setInputCoordinates() {
     }
 }
 
-function setPointFromJointState(jointState) {
-        $('#j1input').val(jointState[0]);
-        $('#j2input').val(jointState[1]);
-        $('#j3input').val(jointState[2]);
-        $('#j4input').val(jointState[3]);
-        $('#j5input').val(jointState[4]);
-        $('#j6input').val(jointState[5]);
+function setInputCoordenatesFromArray(name, arr) {
+    if (name !== null)
+        $('#nameinput').val(name);
+    $('#j1input').val(arr[0]);
+    $('#j2input').val(arr[1]);
+    $('#j3input').val(arr[2]);
+    $('#j4input').val(arr[3]);
+    $('#j5input').val(arr[4]);
+    $('#j6input').val(arr[5]);
+}
+
+function resetInputCoordenates() {
+    setInputCoordenatesFromArray('', ['', '', '', '', '', '']);
+}
+
+function setInputCoordenatesFromModalCaller() {
+    var text = $('#' + modalCallerId).val();
+    var name = $('#' + modalCallerId).val().substr(8).split('=')[0];
+    if (text !== '') {
+        var inputCoordenates = text.slice(0, -6).split('(')[1].split(',');
+        setInputCoordenatesFromArray(name, inputCoordenates);
+    } else {
+        resetInputCoordenates();
+    }
+}
+
+function setInputCoordenatesFromJointState(jointState) {
+    setPointFromArray(null, jointState);
 }
 
 function importCurrentRobotPosition() {
