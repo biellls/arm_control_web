@@ -260,13 +260,6 @@ function A_WHILE() {
         error_msg("Unexpected end of program", token);
         return;
     }
-    //tk = token['token'];
-    //if (tk !== 'RW_TRUE' && tk !== 'RW_FALSE') {
-    //    error_msg("WHILE expression expected boolean", token);
-    //    attempt_error_recovery('EOL');
-    //} else {
-    //    next_token();
-    //}
     A_EXP();
     if (token !== undefined && token['token'] !== 'EOL') {
         error_msg("Expected line jump after while header", token);
@@ -284,11 +277,7 @@ function A_WHILE() {
             next_token();
         }
     }
-    if (token === undefined) {
-        error_msg("Unexpected end of program", token);
-        return;
-    }
-    if (is_statement(token)) {
+    if (token !== undefined && is_statement(token)) {
         A_STMTS();
     }
     if (token === undefined || token['token'] !== 'KW_WEND') {
