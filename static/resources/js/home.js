@@ -186,9 +186,19 @@ function appendPointInput(numPoint) {
         'id="point' + numPoint + 'input" placeholder="Coordenates"' +
         'data-toggle="modal"' +
         'data-target="#pointModal" readonly>' +
+        '<btn id="btn-points' + numPoint + '" onclick="moveToPoint(this.id)" class="btn btn-default">Move</btn>' +
         '</div>';
     //Append the generated new point input to the form
     $('#inputPointsDiv').append(newPointHTML);
+}
+
+function moveToPoint(btnid) {
+    var npoint = btnid.substr('btn-points'.length);
+    var line = $('#point' + npoint + 'input').val();
+    console.log(line);
+    var point = line.slice('DEF POS '.length, -'(7,0)'.length).split('=')[1];
+    publishMessage('---MOVE TOOL STATE---');
+    publishMessage(point);
 }
 
 function pointInput() {
@@ -260,7 +270,7 @@ function setInputCoordenatesFromModalCaller() {
 }
 
 function setInputCoordenatesFromJointState(jointState) {
-    setPointFromArray(null, jointState);
+    setInputCoordenatesFromArray(null, jointState);
 }
 
 function importCurrentRobotPosition() {
@@ -344,8 +354,24 @@ function getJointState() {
     publishMessage("---REQUEST JOINT STATE---");
 }
 
+function unpackToolPose(msg) {
+}
+
 function receiveToolPose(msg) {
     console.log(msg.data);
+    var data = msg.data;
+    var temp = data.split(',');
+    if (temp.length != 6)
+        throw "Invalid tool pose message length";
+    var toolPose =
+        {'x': temp[0],
+         'y': temp[1],
+         'z': temp[2],
+         'roll': temp[3],
+         'pitch': temp[4],
+         'yaw': temp[5]
+        }
+    return toolPose;
 }
 
 function unpackJointStateMessage(msg) {
@@ -360,7 +386,7 @@ function receiveJointState(msg) {
     console.log(msg.data);
     if (requestingJointState) {
         var jointState = unpackJointStateMessage(msg);
-        setPointFromJointState(requestingJointState, jointState);
+        setInputCoordenatesFromJointState(requestingJointState, jointState);
         requestingJointState = false;
     }
 }

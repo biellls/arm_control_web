@@ -95,18 +95,24 @@ function doKeyDown(e) {
     if (e.keyCode == 87) {  // w is pressed
         console.log('h');
         keyInfo['w']['keyPressed'] = true;
+        publishMessage('---MOV TOOL +X---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 65) {
         keyInfo['a']['keyPressed'] = true;
+        publishMessage('---MOV TOOL +Y---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 83) {
         keyInfo['s']['keyPressed'] = true;
+        publishMessage('---MOV TOOL -X---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 68) {
         keyInfo['d']['keyPressed'] = true;
+        publishMessage('---MOV TOOL -Y---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 32) {
         keyInfo['space']['keyPressed'] = true;
     } else if (e.keyCode == 38) {
         keyInfo['up']['keyPressed'] = true;
+        publishMessage('---MOV TOOL +Z---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 40) {
         keyInfo['down']['keyPressed'] = true;
+        publishMessage('---MOV TOOL -Z---' + (Math.floor(Date.now() / 1000)));
     }
     e.preventDefault();
     repaint();

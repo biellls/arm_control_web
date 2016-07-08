@@ -8,7 +8,7 @@ var errors;
 var FirstSTMT = ['KW_IF', 'KW_WHILE', 'RW_END', 'KW_DEF', 'RW_SERVO', 'KW_GOTO',
                  'KW_GOSUB', 'KW_RETURN', 'S_EQUALS', 'ID', 'LABEL', 'KW_MOV',
                  'KW_MVS', 'ID_REF', 'KW_DLY', 'KW_HOPEN', 'KW_HCLOSE', 'KW_HLT',
-                 'KW_JOVRD', 'KW_OVRD', 'KW_SPD'];
+                 'KW_JOVRD', 'KW_OVRD', 'KW_SPD', 'KW_SELECT'];
 var FirstEXP = ['KW_NOT', 'S_MINUS', 'REAL', 'INTEGER', 'STRING', 'ID', 'ID_REF',
                 'S_OPENPAR', 'RW_SIN', 'RW_COS', 'RW_TAN', 'RW_RAD'];
 var labels;
@@ -21,7 +21,7 @@ function analyze_text(text) {
     lookahead = lexer.lex();
     labels = text.match(/^[ \t]*\*[a-zA-Z][a-zA-Z0-9]*/mg)
     if (labels !== null && labels !== undefined) {
-        labels = labels.map(function (x) {return x.trim();});
+        labels = labels.map(function (x) {return x.trim().toLowerCase();});
     }
     A_PROGRAM();
     return errors;
@@ -175,6 +175,8 @@ function A_STMT() {
         A_IF();
     } else if (tk === 'KW_WHILE') {
         A_WHILE();
+    } else if (tk === 'KW_SELECT') {
+        A_SELECT();
     } else if (tk === 'KW_DEF') {
         A_DEF();
     } else if (tk === 'RW_SERVO') {
@@ -288,6 +290,79 @@ function A_WHILE() {
     next_token();
 }
 
+function A_SELECT() {
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    A_EXP();
+    if (token !== undefined && token['token'] !== 'EOL') {
+        error_msg("Expected line jump after select header", token);
+        attempt_error_recovery('EOL');
+    }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    next_token();
+    while (token !== undefined && (token['token'] === 'KW_CASE' ||
+                                   token['token'] === 'KW_DEFAULT')) {
+        var previous = token['token'];
+        next_token();
+        if (token === undefined) {
+            error_msg("Unexpected end of program", token);
+            return;
+        }
+        if (previous == 'KW_CASE') {
+            A_EXP();
+        }
+        if (token !== undefined && token['token'] !== 'EOL') {
+            error_msg("Expected line jump after case condition", token);
+            attempt_error_recovery('EOL');
+        }
+        next_token();
+        if (token === undefined) {
+            error_msg("Unexpected end of program", token);
+            return;
+        }
+        A_STMT();
+        if (token !== undefined && token['token'] !== 'EOL') {
+            error_msg("Expected line jump after case condition", token);
+            attempt_error_recovery('EOL');
+        }
+        next_token();
+        if (token !== undefined && token === 'KW_BREAK')
+            next_token();
+    }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token !== 'KW_END') {
+        error_msg("Expected END CASE", token);
+        attempt_error_recovery('EOL');
+        return;
+    }
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token !== 'KW_SELECT') {
+        error_msg("Expected END CASE", token);
+        attempt_error_recovery('EOL');
+        next_token();
+        return;
+    }
+    next_token();
+    if (token !== 'EOL') {
+        error_msg("Expected line jump after END SELECT", token);
+        attempt_error_recovery('EOL');
+    }
+    next_token();
+}
+
 function A_DEF() {
     next_token();
     if (token === undefined) {
@@ -389,7 +464,7 @@ function check_label(label) {
 }
 
 function label_exists(label) {
-    return labels !== null && labels !== undefined && labels.indexOf(label) !== -1;
+    return labels !== null && labels !== undefined && labels.indexOf(label.toLowerCase()) !== -1;
 }
 
 function A_ASSIG() {
@@ -651,7 +726,7 @@ function A_MOV() {
 // Checks wether point is defined in Points tab
 function check_point(point) {
     var points = get_points();
-    if (points.indexOf(point) < 0) {
+    if (points.indexOf(point.toLowerCase()) < 0) {
         warning_msg("Point " + point + " is not defined", token['row']);
     }
 }
@@ -662,7 +737,7 @@ function get_points() {
     for (var i in point_inputs) {
         var x = point_inputs[i].value;
         if (x !== undefined && x !== '')
-            points.push(x.split(' ')[2].split('=')[0]);
+            points.push(x.split(' ')[2].split('=')[0].toLowerCase());
     }
     return points;
 }

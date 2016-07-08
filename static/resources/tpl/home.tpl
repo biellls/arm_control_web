@@ -122,9 +122,10 @@
                              id="point1input" placeholder="Coordenates"
                              data-toggle="modal"
                              data-target="#pointModal" readonly>
+                      <btn id="btn-points1" onClick="moveToPoint(this.id)" class="btn btn-default">Move</btn>
                     </div>
                   </div>
-                  <div onclick="addPoint()" class="btn btn-default glyphicon glyphicon-plus"></div>
+                  <div onClick="addPoint()" class="btn btn-default glyphicon glyphicon-plus"></div>
                 </div>
 
                 <div class="form-group">

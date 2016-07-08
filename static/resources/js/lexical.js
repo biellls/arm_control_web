@@ -77,6 +77,10 @@ add_keyword_rule('HCLOSE');
 add_keyword_rule('JOVRD');
 add_keyword_rule('OVRD');
 add_keyword_rule('SPD');
+add_keyword_rule('SELECT');
+add_keyword_rule('CASE');
+add_keyword_rule('BREAK');
+add_keyword_rule('DEFAULT');
 
 // Add reserved words and statements
 add_reserved_word_rule('TRUE');
