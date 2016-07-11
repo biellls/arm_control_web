@@ -8,7 +8,7 @@ var errors;
 var FirstSTMT = ['KW_IF', 'KW_WHILE', 'RW_END', 'KW_DEF', 'RW_SERVO', 'KW_GOTO',
                  'KW_GOSUB', 'KW_RETURN', 'S_EQUALS', 'ID', 'LABEL', 'KW_MOV',
                  'KW_MVS', 'ID_REF', 'KW_DLY', 'KW_HOPEN', 'KW_HCLOSE', 'KW_HLT',
-                 'KW_JOVRD', 'KW_OVRD', 'KW_SPD', 'KW_SELECT'];
+                 'KW_JOVRD', 'KW_OVRD', 'KW_SPD', 'KW_SELECT', 'KW_FOR'];
 var FirstEXP = ['KW_NOT', 'S_MINUS', 'REAL', 'INTEGER', 'STRING', 'ID', 'ID_REF',
                 'S_OPENPAR', 'RW_SIN', 'RW_COS', 'RW_TAN', 'RW_RAD'];
 var labels;
@@ -177,6 +177,8 @@ function A_STMT() {
         A_WHILE();
     } else if (tk === 'KW_SELECT') {
         A_SELECT();
+    } else if (tk === 'KW_FOR') {
+        A_FOR();
     } else if (tk === 'KW_DEF') {
         A_DEF();
     } else if (tk === 'RW_SERVO') {
@@ -326,6 +328,11 @@ function A_SELECT() {
             error_msg("Unexpected end of program", token);
             return;
         }
+        if (!is_statement(token)) {
+            error_msg("Expected statement", token);
+            attempt_error_recovery("EOL");
+            return;
+        }
         A_STMT();
         if (token !== undefined && token['token'] !== 'EOL') {
             error_msg("Expected line jump after case condition", token);
@@ -339,7 +346,7 @@ function A_SELECT() {
         error_msg("Unexpected end of program", token);
         return;
     }
-    if (token !== 'KW_END') {
+    if (token['token'] !== 'RW_END') {
         error_msg("Expected END CASE", token);
         attempt_error_recovery('EOL');
         return;
@@ -349,18 +356,115 @@ function A_SELECT() {
         error_msg("Unexpected end of program", token);
         return;
     }
-    if (token !== 'KW_SELECT') {
-        error_msg("Expected END CASE", token);
+    if (token['token'] !== 'KW_SELECT') {
+        error_msg("Expected END SELECT", token);
         attempt_error_recovery('EOL');
         next_token();
         return;
     }
     next_token();
-    if (token !== 'EOL') {
+    if (token['token'] !== 'EOL') {
         error_msg("Expected line jump after END SELECT", token);
         attempt_error_recovery('EOL');
     }
     next_token();
+}
+
+function A_FOR() {
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'ID') {
+        error_msg("Expected ID", token);
+        attempt_error_recovery(['S_EQUALS', 'EOL']);
+        if (token !== undefined && token['token'] == 'EOL')
+            return;
+    } else {
+        next_token();
+    }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'S_EQUALS') {
+        error_msg("Expected comma ','", token);
+        attempt_error_recovery(['KW_TO', 'EOL']);
+        if (token !== undefined && token['token'] == 'EOL')
+            return;
+    } else {
+        next_token();
+    }
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'KW_TO')
+        A_EXP();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'KW_TO') {
+        error_msg("Expected TO", token);
+        attempt_error_recovery('EOL');
+        return;
+    }
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    A_EXP();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] === 'KW_STEP') {
+        next_token();
+        if (token === undefined) {
+            error_msg("Unexpected end of program", token);
+            return;
+        }
+        A_EXP();
+        if (token === undefined) {
+            error_msg("Unexpected end of program", token);
+            return;
+        }
+    }
+    if (token['token'] !== 'EOL') {
+        error_msg("Expected NEXT", token);
+        attempt_error_recovery('EOL');
+    }
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (!is_statement(token)) {
+        error_msg("Expected statement", token);
+        attempt_error_recovery("EOL");
+        return;
+    }
+    A_STMTS();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'KW_NEXT') {
+        error_msg("Expected NEXT", token);
+        attempt_error_recovery('EOL');
+        return;
+    }
+    next_token();
+    if (token === undefined) {
+        error_msg("Unexpected end of program", token);
+        return;
+    }
+    if (token['token'] !== 'EOL') {
+        A_ID_LIST();
+    }
 }
 
 function A_DEF() {

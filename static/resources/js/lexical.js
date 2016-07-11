@@ -81,6 +81,10 @@ add_keyword_rule('SELECT');
 add_keyword_rule('CASE');
 add_keyword_rule('BREAK');
 add_keyword_rule('DEFAULT');
+add_keyword_rule('FOR');
+add_keyword_rule('TO');
+add_keyword_rule('STEP');
+add_keyword_rule('NEXT');
 
 // Add reserved words and statements
 add_reserved_word_rule('TRUE');

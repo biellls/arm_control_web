@@ -1,6 +1,7 @@
 //Keys icons based on Keyboard Key by Arthur Shlain from the Noun Project
 var canvas;
 var ctx;
+var toolOpen = true;
 
 var keyInfo = {
     'w': {
@@ -107,6 +108,14 @@ function doKeyDown(e) {
         publishMessage('---MOV TOOL -Y---' + (Math.floor(Date.now() / 1000)));
     } else if (e.keyCode == 32) {
         keyInfo['space']['keyPressed'] = true;
+        publishMessage("---SINGLE INSTRUCTION---");
+        if (toolOpen) {
+            publishMessage("HCLOSE 1");
+            toolOpen = false;
+        } else {
+            publishMessage("HOPEN 1");
+            toolOpen = true;
+        }
     } else if (e.keyCode == 38) {
         keyInfo['up']['keyPressed'] = true;
         publishMessage('---MOV TOOL +Z---' + (Math.floor(Date.now() / 1000)));

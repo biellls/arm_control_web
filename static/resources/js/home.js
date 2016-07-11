@@ -3,7 +3,7 @@ var editor;
 var jointState;
 var toolPose;
 var modalCallerId;
-var requestingJointState = false;
+var requestingToolPose = false;
 
 
 $(document).ready(function(){
@@ -66,7 +66,7 @@ function initRoslibjs() {
         messageType : 'std_msgs/String'
     });
     
-    jointStateListener.subscribe(receiveJointState);
+    jointStateListener.subscribe(receiveToolPose);
 
     var toolPoseListener = new ROSLIB.Topic({
         ros : ros,
@@ -269,13 +269,21 @@ function setInputCoordenatesFromModalCaller() {
     }
 }
 
-function setInputCoordenatesFromJointState(jointState) {
-    setInputCoordenatesFromArray(null, jointState);
+function setInputCoordenatesFromToolPose(toolPose) {
+    var adjustedToolPose = [];
+    for (var i in toolPose) {
+        if (i < 3) {
+            adjustedToolPose.push(toolPose[i] * 1000);
+        } else {
+            adjustedToolPose.push(toolPose[i] / 3.14159 * 180);
+        }
+    }
+    setInputCoordenatesFromArray(null, adjustedToolPose);
 }
 
 function importCurrentRobotPosition() {
-    publishMessage("---REQUEST JOINT STATE---");
-    requestingJointState = modalCallerId;
+    publishMessage("---REQUEST TOOL POSE---");
+    requestingToolPose = modalCallerId;
 }
 
 function runProgram() {
@@ -350,11 +358,12 @@ function publishMessage(msg) {
     cmdExec.publish(message);
 }
 
-function getJointState() {
-    publishMessage("---REQUEST JOINT STATE---");
-}
-
-function unpackToolPose(msg) {
+function unpackToolPoseMessage(msg) {
+    var data = msg.data;
+    var jointState = data.split(',');
+    if (jointState.length != 6)
+        throw "Invalid joint state message length";
+    return jointState;
 }
 
 function receiveToolPose(msg) {
@@ -382,11 +391,11 @@ function unpackJointStateMessage(msg) {
     return jointState;
 }
 
-function receiveJointState(msg) {
+function receiveToolPose(msg) {
     console.log(msg.data);
-    if (requestingJointState) {
-        var jointState = unpackJointStateMessage(msg);
-        setInputCoordenatesFromJointState(requestingJointState, jointState);
-        requestingJointState = false;
+    if (requestingToolPose) {
+        var toolPose = unpackToolPoseMessage(msg);
+        setInputCoordenatesFromToolPose(toolPose);
+        requestingToolPose = false;
     }
 }

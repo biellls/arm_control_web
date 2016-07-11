@@ -42,11 +42,6 @@
 	    </div>
 	    
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      <ul class="nav navbar-nav">
-		<li>
-		  <a href="#">Settings <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></a>
-		</li>
-	      </ul>
 	      <form class="navbar-form navbar-left" role="search">
 	      </form>
 	    </div>
@@ -62,9 +57,6 @@
 		</button> 
 		<button onclick="runProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-play"></em> Run
-		</button> 
-		<button onclick="getJointState()" class="btn btn-default" type="button">
-		  <em class="glyphicon glyphicon-arrow-down"></em> Get joint state
 		</button> 
 		<button onclick="syntaxCheck()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-check"></em>
@@ -181,33 +173,33 @@
                          id="nameinput" placeholder="Point name">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="j1">Joint 1</label>
+                  <label for="j1">X</label>
                   <input type="number" class="form-control"
                          id="j1input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="j2">Joint 2</label>
+                  <label for="j2">Y</label>
                   <input type="number" class="form-control"
                          id="j2input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="j3">Joint 3</label>
+                  <label for="j3">Z</label>
                   <input type="number" class="form-control"
                          id="j3input" placeholder="Joint angle">
                 </div>
 
                 <div id "point-form-group" class="form-group">
-                  <label for="j4">Joint 4</label>
+                  <label for="j4">Roll</label>
                   <input type="number" class="form-control"
                          id="j4input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="j5">Joint 5</label>
+                  <label for="j5">Pitch</label>
                   <input type="number" class="form-control"
                          id="j5input" placeholder="Joint angle">
                 </div>
                 <div id "point-form-group" class="form-group">
-                  <label for="j6">Joint 6</label>
+                  <label for="j6">Yaw</label>
                   <input type="number" class="form-control"
                          id="j6input" placeholder="Joint angle">
                 </div>
