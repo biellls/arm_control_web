@@ -42,10 +42,11 @@
 	    </div>
 	    
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	      <form class="navbar-form navbar-left" role="search">
-	      </form>
+	      <form class="navbar-form navbar-left" role="search"> </form>
+	      <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout">Logout</a></li>
+              </ul>    
 	    </div>
-	    
 	  </nav>
 	  <div class="row">
 	    <div class="col-md-10">
@@ -57,6 +58,9 @@
 		</button> 
 		<button onclick="runProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-play"></em> Run
+		</button> 
+		<button class="btn btn-default" type="button">
+		  <em class="glyphicon glyphicon-floppy-save"></em> Save
 		</button> 
 		<button onclick="syntaxCheck()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-check"></em>
@@ -115,6 +119,7 @@
                              data-toggle="modal"
                              data-target="#pointModal" readonly>
                       <btn id="btn-points1" onClick="moveToPoint(this.id)" class="btn btn-default">Move</btn>
+                      <div onClick="deletePoint()" class="btn btn-default glyphicon glyphicon-trash"></div>
                     </div>
                   </div>
                   <div onClick="addPoint()" class="btn btn-default glyphicon glyphicon-plus"></div>
@@ -125,7 +130,6 @@
                   <input type="file" id="pointsInputFile">
                   <p class="help-block">Load points from .pos file.</p>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
               </form>
             </div>
 

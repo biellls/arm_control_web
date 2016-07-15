@@ -187,6 +187,7 @@ function appendPointInput(numPoint) {
         'data-toggle="modal"' +
         'data-target="#pointModal" readonly>' +
         '<btn id="btn-points' + numPoint + '" onclick="moveToPoint(this.id)" class="btn btn-default">Move</btn>' +
+        '<div onClick="deletePoint()" class="btn btn-default glyphicon glyphicon-trash"></div>' +
         '</div>';
     //Append the generated new point input to the form
     $('#inputPointsDiv').append(newPointHTML);
