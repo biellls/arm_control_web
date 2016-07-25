@@ -293,6 +293,42 @@ function runProgram() {
     cmdExec.publish(message);
 }
 
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+function saveMb4() {
+    download('program.MB4', editor.getValue());
+}
+
+function savePoints() {
+    var points = [];
+    for (var i = 1; i <= numPoints; i++) {
+        var point = $('#point' + i + 'input').val();
+        points.push(point);
+    }
+    var fileContents = points.join('\n');
+    download('points.POS', fileContents);
+}
+
+function saveProgramOrPoints() {
+    var activeTab = $("ul#tabView li.active a").attr("data-target");
+    if (activeTab == "#mb4-editor")
+        saveMb4();
+    else if (activeTab == "#points-editor") {
+        savePoints();
+    }
+}
+
 function uploadProject() {
     deleteFromRobot();
     uploadProgram();

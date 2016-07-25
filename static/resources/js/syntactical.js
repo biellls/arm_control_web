@@ -12,6 +12,7 @@ var FirstSTMT = ['KW_IF', 'KW_WHILE', 'RW_END', 'KW_DEF', 'RW_SERVO', 'KW_GOTO',
 var FirstEXP = ['KW_NOT', 'S_MINUS', 'REAL', 'INTEGER', 'STRING', 'ID', 'ID_REF',
                 'S_OPENPAR', 'RW_SIN', 'RW_COS', 'RW_TAN', 'RW_RAD'];
 var labels;
+var defined_points;
 
 function analyze_text(text) {
     resetLexer();
@@ -20,6 +21,7 @@ function analyze_text(text) {
     token = lexer.lex();
     lookahead = lexer.lex();
     labels = text.match(/^[ \t]*\*[a-zA-Z][a-zA-Z0-9]*/mg)
+    defined_points = [];
     if (labels !== null && labels !== undefined) {
         labels = labels.map(function (x) {return x.trim().toLowerCase();});
     }
@@ -474,6 +476,7 @@ function A_DEF() {
         return;
     }
     tk = token['token'];
+    var is_pos = false;
     if (tk !== 'KW_DOUBLE' && tk !== 'KW_CHAR' && tk !== 'KW_FLOAT' &&
        tk !== 'KW_INTE' && tk !== 'KW_POS') {
         error_msg("DEF expected [DOUBLE, CHAR, FLOAT, INTE, POS]", token);
@@ -483,6 +486,7 @@ function A_DEF() {
             return;
         }
     } else {
+        is_pos = (tk == 'KW_POS');
         next_token();
     }
     if (token === undefined) {
@@ -493,10 +497,16 @@ function A_DEF() {
         attempt_error_recovery('EOL');
         return;
     }
-    A_ID_LIST();
+    A_ID_LIST(is_pos);
 }
 
-function A_ID_LIST() {
+function add_pos_id(pos_id) {
+    defined_points.push(pos_id.toLowerCase());
+}
+
+function A_ID_LIST(is_pos) {
+    if (is_pos !== undefined && is_pos)
+        add_pos_id(token['value']);
     next_token();
     while (token !== undefined && token['token'] == 'S_COMMA') {
         next_token();
@@ -511,6 +521,8 @@ function A_ID_LIST() {
                 return;
             }
         }
+        if (is_pos !== undefined && is_pos)
+            add_pos_id(token['value']);
         next_token();
     }
 }
@@ -837,7 +849,7 @@ function check_point(point) {
 
 function get_points() {
     var point_inputs = $('.points');
-    var points = [];
+    var points = defined_points;
     for (var i in point_inputs) {
         var x = point_inputs[i].value;
         if (x !== undefined && x !== '')

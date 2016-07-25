@@ -59,7 +59,7 @@
 		<button onclick="runProgram()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-play"></em> Run
 		</button> 
-		<button class="btn btn-default" type="button">
+		<button onclick="saveProgramOrPoints()" class="btn btn-default" type="button">
 		  <em class="glyphicon glyphicon-floppy-save"></em> Save
 		</button> 
 		<button onclick="syntaxCheck()" class="btn btn-default" type="button">
